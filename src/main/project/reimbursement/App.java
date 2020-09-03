@@ -4,52 +4,129 @@
 package project.reimbursement;
 
 import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.Locale;
+
+import project.reimbursement.models.Project;
+import project.reimbursement.models.Set;
 
 public class App {
 
     public static void main(String[] args) throws ParseException {
-        SimpleDateFormat formatter = new SimpleDateFormat("dd-MMM-yyyy", Locale.ENGLISH);
-        String dateInString = "7-Jun-2020";
-        String dateEndInString = "10-Jun-2020";
-        Date x = new Date();
-        Date y = formatter.parse(dateInString);
-        Date startDate = formatter.parse(dateInString);
-        Date endDate = formatter.parse(dateEndInString);
+        createSet1();
+        System.out.println("---------");
+        createSet2();
+        System.out.println("---------");
+        createSet3();
+        System.out.println("---------");
+        createSet4();
+        System.out.println("---------");
+        createSet5();
+    }
 
-        Day day = new Day(x, CityType.LOW_COST);
-        Day day2 = new Day(x, CityType.HIGH_COST);
-        Day day3 = new Day(y, CityType.LOW_COST);
+    public static void createSet1() throws ParseException {
+        String project1Start = "1-Sep-2015";
+        String project1End = "3-Sep-2015";
 
-        HashMap<Date, Day> days = new HashMap<>();
+        Project project1 = new Project(project1Start, project1End, CityType.LOW_COST);
 
-        addDayToList(day, days);
-        addDayToList(day2, days);
-        addDayToList(day3, days);
+        Set set = new Set();
+        set.addProject(project1);
 
-        days.values().stream().forEach(singleDay -> {
-            System.out.println("Day Added: " + singleDay.getDate());
-        });
+        set.generateTimeline();
+        set.processTimeLine();
+        System.out.println("Total for set 1: $" + set.calculateTotal() / 100);
+    }
 
-        Project project = new Project(startDate, endDate, CityType.LOW_COST);
+    public static void createSet2() throws ParseException {
+        String project1Start = "1-Sep-2015";
+        String project1End = "1-Sep-2015";
+        String project2Start = "2-Sep-2015";
+        String project2End = "6-Sep-2015";
+        String project3Start = "6-Sep-2015";
+        String project3End = "8-Sep-2015";
+
+        Project project1 = new Project(project1Start, project1End, CityType.LOW_COST);
+        Project project2 = new Project(project2Start, project2End, CityType.HIGH_COST);
+        Project project3 = new Project(project3Start, project3End, CityType.LOW_COST);
+
+        Set set = new Set();
+        set.addProject(project1);
+        set.addProject(project2);
+        set.addProject(project3);
+
+        set.generateTimeline();
+
+        set.processTimeLine();
+
+        System.out.println("Total for set 2: $" + set.calculateTotal() / 100);
 
     }
 
-    public static void addDayToList(Day day, HashMap<Date, Day> days) {
-        if (days.containsKey(day.getDate())) {
-            Day existingDay = days.get(day.getDate());
-            if (CityType.LOW_COST.equals(existingDay.getType())) {
-                if (CityType.HIGH_COST.equals(day.getType())) {
-                    days.remove(day.getDate());
-                    days.put(day.getDate(), day);
-                }
-            }
-        } else {
-            days.put(day.getDate(), day);
-        }
+    public static void createSet3() throws ParseException {
+        String project1Start = "1-Sep-2015";
+        String project1End = "3-Sep-2015";
+        String project2Start = "5-Sep-2015";
+        String project2End = "7-Sep-2015";
+        String project3Start = "8-Sep-2015";
+        String project3End = "8-Sep-2015";
+
+        Project project1 = new Project(project1Start, project1End, CityType.LOW_COST);
+        Project project2 = new Project(project2Start, project2End, CityType.HIGH_COST);
+        Project project3 = new Project(project3Start, project3End, CityType.HIGH_COST);
+
+        Set set3 = new Set();
+        set3.addProject(project1);
+        set3.addProject(project2);
+        set3.addProject(project3);
+
+        set3.generateTimeline();
+
+        set3.processTimeLine();
+
+        System.out.println("Total for set 3: $" + set3.calculateTotal() / 100);
     }
 
+    public static void createSet4() throws ParseException {
+        String project1Start = "1-Sep-2015";
+        String project1End = "1-Sep-2015";
+        String project2Start = "1-Sep-2015";
+        String project2End = "1-Sep-2015";
+        String project3Start = "2-Sep-2015";
+        String project3End = "2-Sep-2015";
+        String project4Start = "2-Sep-2015";
+        String project4End = "3-Sep-2015";
+
+        Project project1 = new Project(project1Start, project1End, CityType.LOW_COST);
+        Project project2 = new Project(project2Start, project2End, CityType.LOW_COST);
+        Project project3 = new Project(project3Start, project3End, CityType.HIGH_COST);
+        Project project4 = new Project(project4Start, project4End, CityType.HIGH_COST);
+
+        Set set = new Set();
+        set.addProject(project1);
+        set.addProject(project2);
+        set.addProject(project3);
+        set.addProject(project4);
+
+        set.generateTimeline();
+
+        set.processTimeLine();
+
+        System.out.println("Total for set 4: $" + set.calculateTotal() / 100);
+    }
+
+    public static void createSet5() throws ParseException {
+        String project1Start = "3-Sep-2015";
+        String project1End = "1-Sep-2015";
+
+        Project project1 = new Project(project1Start, project1End, CityType.LOW_COST);
+
+        Set set = new Set();
+        set.addProject(project1);
+
+        set.generateTimeline();
+
+        set.processTimeLine();
+
+        System.out.println("Total for set 4: $" + set.calculateTotal() / 100);
+
+    }
 }
