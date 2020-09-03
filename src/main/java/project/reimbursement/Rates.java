@@ -4,6 +4,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import project.reimbursement.enums.CityType;
+import project.reimbursement.enums.DayType;
 import project.reimbursement.exceptions.ConfigurationException;
 import project.reimbursement.exceptions.RateNotFoundException;
 import project.reimbursement.models.Rate;

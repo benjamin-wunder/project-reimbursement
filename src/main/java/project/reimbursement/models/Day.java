@@ -3,7 +3,7 @@ package project.reimbursement.models;
 import java.util.Date;
 import java.util.Optional;
 
-import project.reimbursement.CityType;
+import project.reimbursement.enums.CityType;
 
 /**
  * This represents a single day node
@@ -12,8 +12,6 @@ import project.reimbursement.CityType;
  * The beginning and end of any linked list will be considered travel days
  * The middle days of any linked list will be considered full days
  * 
- * @author benja
- *
  */
 
 public class Day {

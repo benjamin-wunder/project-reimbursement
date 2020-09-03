@@ -1,7 +1,7 @@
 package project.reimbursement.models;
 
-import project.reimbursement.CityType;
-import project.reimbursement.DayType;
+import project.reimbursement.enums.CityType;
+import project.reimbursement.enums.DayType;
 
 /**
  * Rates - A representation of a single rate

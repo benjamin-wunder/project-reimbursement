@@ -9,9 +9,12 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
-import project.reimbursement.CityType;
-import project.reimbursement.DayType;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
 import project.reimbursement.Rates;
+import project.reimbursement.enums.CityType;
+import project.reimbursement.enums.DayType;
 import project.reimbursement.exceptions.ConfigurationException;
 import project.reimbursement.exceptions.ProcessException;
 
@@ -20,6 +23,7 @@ import project.reimbursement.exceptions.ProcessException;
  *
  */
 public class Set {
+    private static final Logger LOGGER = LogManager.getLogger(Set.class);
     List<Project> projects;
     Map<Date, Day> allDays;
     Integer setId;
@@ -59,10 +63,10 @@ public class Set {
      * If two projects have the same day/date, the HIGH_COST prevails.
      */
     public void generateTimeline() {
-        System.out.println("Beginning Get Calculated Total...");
+        LOGGER.debug("Beginning Get Calculated Total...");
         allDays = new LinkedHashMap<>();
         this.getProjects().stream().forEach(project -> {
-            System.out.println("Processing project " + project);
+            LOGGER.debug("Processing project " + project);
             Map<Date, Day> days = project.getDays();
             days.values().forEach(day -> {
                 Date dayKey = day.getDate();
@@ -70,7 +74,7 @@ public class Set {
                     Day existingDay = allDays.get(dayKey);
                     if (CityType.LOW_COST.equals(existingDay.getType())) {
                         if (CityType.HIGH_COST.equals(day.getType())) {
-                            System.out.println("Replacing low cost day with high cost day");
+                            LOGGER.debug("Replacing low cost day with high cost day");
                             allDays.remove(dayKey);
                             allDays.put(dayKey, day);
                         }
@@ -81,8 +85,8 @@ public class Set {
             });
         });
 
-        System.out.println("Generated Timeline:");
-        allDays.values().stream().forEach(System.out::println);
+        LOGGER.debug("Generated Timeline:");
+        allDays.values().stream().map(day -> day.toString()).forEach(LOGGER::debug);
     }
 
     /**
@@ -114,8 +118,8 @@ public class Set {
             lastDay = currentDay;
         }
 
-        System.out.println("Processed Timeline:");
-        allDays.values().stream().forEach(System.out::println);
+        LOGGER.debug("Processed Timeline:");
+        allDays.values().stream().map(day -> day.toString()).forEach(LOGGER::debug);
 
     }
 
@@ -128,20 +132,22 @@ public class Set {
      */
     public Integer calculateTotal() throws ConfigurationException, ProcessException {
         checkStatus();
-        System.out.println("Calculating Totals:");
-        return allDays.values().stream().mapToInt(day -> {
-            if (day.getNextDay().isPresent() && day.getPreviousDay().isPresent()) {
-                Integer rate = Rates.getRate(day.getType(), DayType.FULL).getCost();
-                System.out.println(String.format("Full Day (Rate: %d) - %s", rate, day));
-                return rate;
-            } else if (day.getNextDay().isPresent() ^ day.getPreviousDay().isPresent()) {
-                Integer rate = Rates.getRate(day.getType(), DayType.TRAVEL).getCost();
-                System.out.println(String.format("Travel Day (Rate: %d) - %s", rate, day));
-                return rate;
-            } else {
-                return 0;
-            }
-        }).sum();
+        LOGGER.debug("Calculating Totals:");
+        return allDays.values().stream()
+                .mapToInt(day -> {
+                    if (day.getNextDay().isPresent() && day.getPreviousDay().isPresent()) {
+                        Integer rate = Rates.getRate(day.getType(), DayType.FULL).getCost();
+                        LOGGER.debug("Full Day (Rate: %d) - %s", rate, day);
+                        return rate;
+                    } else if (day.getNextDay().isPresent() ^ day.getPreviousDay().isPresent()) {
+                        Integer rate = Rates.getRate(day.getType(), DayType.TRAVEL).getCost();
+                        LOGGER.debug("Travel Day (Rate: %d) - %s", rate, day);
+                        return rate;
+                    } else {
+                        return 0;
+                    }
+                })
+                .sum();
     }
 
     private void checkStatus() throws ProcessException {

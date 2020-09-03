@@ -8,16 +8,32 @@ import java.util.LinkedHashMap;
 import java.util.Locale;
 import java.util.Map;
 
-import project.reimbursement.CityType;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
+import project.reimbursement.enums.CityType;
 import project.reimbursement.exceptions.ValidationException;
 
+/**
+ * This is a class designed to define a single project
+ *
+ */
 public class Project {
+    private static final Logger LOGGER = LogManager.getLogger(Project.class);
     Integer id;
     Date startDate;
     Date endDate;
     CityType cityType;
     Map<Date, Day> days;
 
+    /**
+     * Construct a Project with the given parameters
+     * 
+     * @param startDate The beginning date of the project
+     * @param endDate The end date of the project
+     * @param cityType High or Low cost city
+     * @throws ParseException If the dates provided aren't parsable
+     */
     public Project(String startDate, String endDate, CityType cityType) throws ParseException {
         SimpleDateFormat formatter = new SimpleDateFormat("dd-MMM-yyyy", Locale.ENGLISH);
         this.id = (int) Math.floor(Math.random() * 100000000);
@@ -64,8 +80,11 @@ public class Project {
         this.days = days;
     }
 
+    /**
+     * Generate a list of days based on the given start and end date.
+     */
     private void createDayList() {
-        System.out.println(this.toString() + " Creating Day List...");
+        LOGGER.debug(this.toString() + " Creating Day List...");
         if (this.startDate == null || this.endDate == null || this.cityType == null) {
             throw new RuntimeException(this.toString() + " Error: missing data to create a day list for this project");
         }
@@ -89,11 +108,14 @@ public class Project {
             currentDate = c.getTime();
         }
 
-        days.values().stream().forEach(day -> {
-            System.out.println(day);
-        });
+        days.values().stream()
+                .map(day -> day.toString())
+                .forEach(LOGGER::debug);
     }
 
+    /**
+     * Output Project ID as string
+     */
     @Override
     public String toString() {
         return String.format("[Project (id: %s)]", id);

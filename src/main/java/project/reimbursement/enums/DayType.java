@@ -1,4 +1,4 @@
-package project.reimbursement;
+package project.reimbursement.enums;
 
 public enum DayType {
     TRAVEL, FULL
