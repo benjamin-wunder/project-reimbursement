@@ -3,15 +3,18 @@ package project.reimbursement.models;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
+import java.util.Collections;
 import java.util.Date;
 import java.util.LinkedHashMap;
 import java.util.Locale;
 import java.util.Map;
+import java.util.Optional;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import project.reimbursement.enums.CityType;
+import project.reimbursement.exceptions.ProcessException;
 import project.reimbursement.exceptions.ValidationException;
 
 /**
@@ -20,11 +23,16 @@ import project.reimbursement.exceptions.ValidationException;
  */
 public class Project {
     private static final Logger LOGGER = LogManager.getLogger(Project.class);
-    Integer id;
-    Date startDate;
-    Date endDate;
-    CityType cityType;
-    Map<Date, Day> days;
+    private Integer id;
+
+    private CityType cityType;
+    private Optional<Date> startDate = Optional.empty();
+    private Optional<Date> endDate = Optional.empty();
+    private Map<Date, Day> days;
+
+    public Project() {
+        // For serialization
+    }
 
     /**
      * Construct a Project with the given parameters
@@ -38,30 +46,52 @@ public class Project {
         SimpleDateFormat formatter = new SimpleDateFormat("dd-MMM-yyyy", Locale.ENGLISH);
         this.id = (int) Math.floor(Math.random() * 100000000);
 
-        this.startDate = formatter.parse(startDate);
-        this.endDate = formatter.parse(endDate);
+        this.startDate = Optional.of(formatter.parse(startDate));
+        this.endDate = Optional.of(formatter.parse(endDate));
 
-        if (this.endDate.before(this.startDate)) {
+        if (this.endDate.get().before(this.startDate.get())) {
             throw new ValidationException("Error: Project end dates must not come before start dates");
         }
         this.cityType = cityType;
         createDayList();
     }
 
-    public Date getStartDate() {
+    public Integer getId() {
+        return id;
+    }
+
+    public void setId(Integer id) {
+        this.id = id;
+    }
+
+    public Optional<Date> getStartDate() {
         return startDate;
     }
 
     public void setStartDate(Date startDate) {
-        this.startDate = startDate;
+        if (this.startDate.isPresent()) {
+            throw new ProcessException("Error: Start Date already set");
+        }
+        this.startDate = Optional.of(startDate);
+        if (this.endDate.isPresent() && this.cityType != null) {
+            LOGGER.debug("Creating from setStartDate");
+            createDayList();
+        }
     }
 
-    public Date getEndDate() {
+    public Optional<Date> getEndDate() {
         return endDate;
     }
 
     public void setEndDate(Date endDate) {
-        this.endDate = endDate;
+        if (this.endDate.isPresent()) {
+            throw new ProcessException("Error: End Date already set");
+        }
+        this.endDate = Optional.of(endDate);
+        if (this.startDate.isPresent() && this.cityType != null) {
+            LOGGER.debug("Creating from setEndDate");
+            createDayList();
+        }
     }
 
     public CityType getCityType() {
@@ -70,14 +100,14 @@ public class Project {
 
     public void setCityType(CityType cityType) {
         this.cityType = cityType;
+        if (this.startDate != null && this.endDate != null) {
+            LOGGER.debug("Creating from city type");
+            createDayList();
+        }
     }
 
     public Map<Date, Day> getDays() {
-        return days;
-    }
-
-    public void setDays(Map<Date, Day> days) {
-        this.days = days;
+        return Collections.unmodifiableMap(days);
     }
 
     /**
@@ -86,10 +116,17 @@ public class Project {
     private void createDayList() {
         LOGGER.debug(this.toString() + " Creating Day List...");
         if (this.startDate == null || this.endDate == null || this.cityType == null) {
-            throw new RuntimeException(this.toString() + " Error: missing data to create a day list for this project");
+            throw new ProcessException(this.toString() + " Error: missing data to create a day list for this project");
         }
-        Date currentDate = this.startDate;
-        Date endDate = this.endDate;
+
+        // Since the sets are using the project day objects to calculate project timelines, this shouldn't be run twice on the same project
+        if (this.days != null && !this.days.isEmpty()) {
+            throw new ProcessException(
+                    this.toString() + " Error: Project day list already created.  Running again may disrupt set calcualtions already completed");
+        }
+
+        Date currentDate = this.startDate.get();
+        Date endDate = this.endDate.get();
         this.days = new LinkedHashMap<>();
 
         Day startDay = new Day(currentDate, this.cityType);

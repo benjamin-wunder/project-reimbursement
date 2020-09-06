@@ -24,13 +24,28 @@ import project.reimbursement.exceptions.ProcessException;
  */
 public class Set {
     private static final Logger LOGGER = LogManager.getLogger(Set.class);
-    List<Project> projects;
-    Map<Date, Day> allDays;
-    Integer setId;
+    private List<Project> projects;
+    private Map<Date, Day> allDays;
+    private Integer setId;
+    private Rates rates;
 
     public Set() {
+        LOGGER.debug("Generating Set");
         projects = new ArrayList<>();
         allDays = new LinkedHashMap<>();
+    }
+
+    public Set(Rates rates) {
+        this();
+        this.rates = rates;
+    }
+
+    public Rates getRates() {
+        return rates;
+    }
+
+    public void setRates(Rates rates) {
+        this.rates = rates;
     }
 
     public void addProject(Project project) {
@@ -42,11 +57,7 @@ public class Set {
     }
 
     public Map<Date, Day> getAllDays() {
-        return allDays;
-    }
-
-    public void setAllDays(Map<Date, Day> allDays) {
-        this.allDays = allDays;
+        return Collections.unmodifiableMap(allDays);
     }
 
     public Integer getSetId() {
@@ -63,6 +74,9 @@ public class Set {
      * If two projects have the same day/date, the HIGH_COST prevails.
      */
     public void generateTimeline() {
+        if (projects.isEmpty()) {
+            throw new ProcessException("Error: No projects to use for timeline generation");
+        }
         LOGGER.debug("Beginning Get Calculated Total...");
         allDays = new LinkedHashMap<>();
         this.getProjects().stream().forEach(project -> {
@@ -87,6 +101,8 @@ public class Set {
 
         LOGGER.debug("Generated Timeline:");
         allDays.values().stream().map(day -> day.toString()).forEach(LOGGER::debug);
+
+        processTimeLine();
     }
 
     /**
@@ -94,8 +110,10 @@ public class Set {
      * 
      * @throws ProcessException
      */
-    public void processTimeLine() throws ProcessException {
-        checkStatus();
+    private void processTimeLine() throws ProcessException {
+        if (allDays.isEmpty()) {
+            throw new ProcessException("Error: No Days to process.  Consider running generateTimeLine if projects have already been added to the set");
+        }
 
         Iterator<Map.Entry<Date, Day>> itr = allDays.entrySet().iterator();
 
@@ -130,18 +148,18 @@ public class Set {
      * @throws ConfigurationException If a rate is configured incorrectly
      * @throws ProcessException If the set is not in a state where it can calculate the total
      */
-    public Integer calculateTotal() throws ConfigurationException, ProcessException {
+    public Integer calculateTotalInCents() throws ConfigurationException, ProcessException {
         checkStatus();
         LOGGER.debug("Calculating Totals:");
         return allDays.values().stream()
                 .mapToInt(day -> {
                     if (day.getNextDay().isPresent() && day.getPreviousDay().isPresent()) {
-                        Integer rate = Rates.getRate(day.getType(), DayType.FULL).getCost();
-                        LOGGER.debug("Full Day (Rate: %d) - %s", rate, day);
+                        Integer rate = rates.getRateInCents(day.getType(), DayType.FULL).getCostInCents();
+                        LOGGER.debug("Full Day (Rate: {}) - {}", rate, day);
                         return rate;
                     } else if (day.getNextDay().isPresent() ^ day.getPreviousDay().isPresent()) {
-                        Integer rate = Rates.getRate(day.getType(), DayType.TRAVEL).getCost();
-                        LOGGER.debug("Travel Day (Rate: %d) - %s", rate, day);
+                        Integer rate = rates.getRateInCents(day.getType(), DayType.TRAVEL).getCostInCents();
+                        LOGGER.debug("Travel Day (Rate: {}) - {}", rate, day);
                         return rate;
                     } else {
                         return 0;

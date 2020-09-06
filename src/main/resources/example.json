@@ -1,0 +1,112 @@
+{
+    "sets": [
+        {
+            "setId": 1,
+            "projects": [
+                {
+                    "id": 1,
+                    "startDate": "01-SEP-2020",
+                    "endDate": "03-SEP-2020",
+                    "cityType": "LOW_COST"
+                }
+            ]
+        },
+        {
+            "setId": 2,
+            "projects": [
+                {
+                    "id": 2,
+                    "startDate": "01-SEP-2020",
+                    "endDate": "01-SEP-2020",
+                    "cityType": "LOW_COST"
+                },
+                {
+                    "id": 3,
+                    "startDate": "02-SEP-2020",
+                    "endDate": "06-SEP-2020",
+                    "cityType": "HIGH_COST"
+                },
+                {
+                    "id": 4,
+                    "startDate": "06-SEP-2020",
+                    "endDate": "08-SEP-2020",
+                    "cityType": "LOW_COST"
+                }
+            ]
+        },
+        {
+            "setId": 3,
+            "projects": [
+                {
+                    "id": 5,
+                    "startDate": "01-SEP-2020",
+                    "endDate": "03-SEP-2020",
+                    "cityType": "LOW_COST"
+                },
+                {
+                    "id": 6,
+                    "startDate": "05-SEP-2020",
+                    "endDate": "07-SEP-2020",
+                    "cityType": "HIGH_COST"
+                },
+                {
+                    "id": 7,
+                    "startDate": "08-SEP-2020",
+                    "endDate": "08-SEP-2020",
+                    "cityType": "HIGH_COST"
+                }
+            ]
+        },
+        {
+            "setId": 4,
+            "projects": [
+                {
+                    "id": 8,
+                    "startDate": "01-SEP-2020",
+                    "endDate": "01-SEP-2020",
+                    "cityType": "LOW_COST"
+                },
+                {
+                    "id": 9,
+                    "startDate": "01-SEP-2020",
+                    "endDate": "01-SEP-2020",
+                    "cityType": "LOW_COST"
+                },
+                {
+                    "id": 10,
+                    "startDate": "02-SEP-2020",
+                    "endDate": "02-SEP-2020",
+                    "cityType": "HIGH_COST"
+                },
+                {
+                    "id": 11,
+                    "startDate": "02-SEP-2020",
+                    "endDate": "03-SEP-2020",
+                    "cityType": "HIGH_COST"
+                }
+            ]
+        }
+    ],
+    "rates": [
+        {
+            "cityType": "LOW_COST",
+            "dayType": "TRAVEL",
+            "cost": 4500 
+        },
+        {
+            "cityType": "HIGH_COST",
+            "dayType": "TRAVEL",
+            "cost": 5500 
+        },
+        {
+            "cityType": "LOW_COST",
+            "dayType": "FULL",
+            "cost": 7500 
+        },
+        {
+            "cityType": "HIGH_COST",
+            "dayType": "FULL",
+            "cost": 8500 
+        }
+    ]
+}        

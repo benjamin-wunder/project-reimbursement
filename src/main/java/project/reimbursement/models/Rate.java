@@ -5,19 +5,25 @@ import project.reimbursement.enums.DayType;
 
 /**
  * Rates - A representation of a single rate
+ * 
  * @author benja
  *
  */
 public class Rate {
     private CityType cityType;
     private DayType dayType;
-    private Integer cost;
+    private Integer costInCents;
 
-    public Rate(CityType cityType, DayType dayType, Integer cost) {
+    public Rate() {
+        //For Serialization/Deserialization
+    }
+
+    public Rate(CityType cityType, DayType dayType, Integer costInCents) {
         this.cityType = cityType;
         this.dayType = dayType;
-        this.cost = cost;
+        this.costInCents = costInCents;
     }
+
     public CityType getCityType() {
         return cityType;
     }
@@ -34,11 +40,16 @@ public class Rate {
         this.dayType = dayType;
     }
 
-    public Integer getCost() {
-        return cost;
+    public Integer getCostInCents() {
+        return costInCents;
     }
 
-    public void setCost(Integer cost) {
-        this.cost = cost;
+    public void setCostInCents(Integer costInCents) {
+        this.costInCents = costInCents;
+    }
+
+    @Override
+    public String toString() {
+        return "City Type: [" + cityType + "] Day Type: [" + dayType + "]" + " Cost: [$" + costInCents / 100 + "]";
     }
 }
