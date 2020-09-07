@@ -10,6 +10,7 @@ import java.util.Locale;
 import org.junit.Test;
 
 import project.reimbursement.enums.CityType;
+import project.reimbursement.exceptions.ValidationException;
 
 public class ProjectTest {
 
@@ -32,6 +33,11 @@ public class ProjectTest {
         new Project("1-BADDATA", "2-BADDATA", CityType.LOW_COST);
     }
 
+    @Test(expected = ValidationException.class)
+    public void testProjectEndDateBeforeStartDate() throws ParseException {
+        new Project("4-SEP-2015", "1-SEP-2015", CityType.LOW_COST);
+    }
+
     @Test(expected = UnsupportedOperationException.class)
     public void testProjectDaysProtected() throws ParseException {
         Project project = new Project("1-SEP-2020", "2-SEP-2020", CityType.LOW_COST);
@@ -45,5 +51,4 @@ public class ProjectTest {
         Project project = new Project(startDateString, endDateString, CityType.LOW_COST);
         assertEquals(project.getDays().size(), 10);
     }
-
 }

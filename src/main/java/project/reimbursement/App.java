@@ -26,8 +26,8 @@ public class App {
     private static final Logger LOGGER = LogManager.getLogger(App.class);
 
     public static void main(String[] args) throws ParseException, JsonParseException, JsonMappingException, IOException {
-        /* 
-        Rates rates = new Rates;
+
+        Rates rates = new Rates();
         rates.setExampleRates();
         createSet1(rates);
         LOGGER.info("---------");
@@ -38,16 +38,18 @@ public class App {
         createSet4(rates);
         LOGGER.info("---------");
         createSet5(rates);
-        */
+
+        /*List<String> argumentArray = Arrays.asList(args);
+        argumentArray.forEach(System.out::println);
         SetInput setInput = importFrom("c:\\temp\\reimbursement_input.json");
-
+        
         LOGGER.debug("Set Size: {}", setInput.getSets().size());
-
+        
         setInput.getSets().stream().forEach(set -> {
             set.generateTimeline();
             Integer costInCents = set.calculateTotalInCents();
             LOGGER.info("Total for set {}: ${}", set.getSetId(), costInCents / CENTS_IN_A_DOLLAR);
-        });
+        });*/
     }
 
     public static void createSet1(Rates rates) throws ParseException {
