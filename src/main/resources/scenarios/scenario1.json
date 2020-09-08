@@ -1,0 +1,39 @@
+{
+    "sets": [
+        {
+            "setId": 1,
+            "projects": [
+                {
+                    "id": 1,
+                    "startDate": "01-SEP-2020",
+                    "endDate": "03-SEP-2020",
+                    "cityType": "LOW_COST"
+                }
+            ]
+        }
+    ],
+    "rates": {
+    	"rates": [
+	        {
+	            "cityType": "LOW_COST",
+	            "dayType": "TRAVEL",
+	            "costInCents": 4500 
+	        },
+	        {
+	            "cityType": "HIGH_COST",
+	            "dayType": "TRAVEL",
+	            "costInCents": 5500 
+	        },
+	        {
+	            "cityType": "LOW_COST",
+	            "dayType": "FULL",
+	            "costInCents": 7500 
+	        },
+	        {
+	            "cityType": "HIGH_COST",
+	            "dayType": "FULL",
+	            "costInCents": 8500 
+	        }
+    	]
+    }
+}        

@@ -18,6 +18,7 @@ public class Day {
     private Date date;
     private CityType type;
 
+    //Home-rolling a linked list to use custom pointers
     Optional<Day> previousDay = Optional.empty();
     Optional<Day> nextDay = Optional.empty();
 

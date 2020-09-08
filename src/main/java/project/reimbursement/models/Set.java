@@ -24,6 +24,7 @@ import project.reimbursement.exceptions.ProcessException;
  */
 public class Set {
     private static final Logger LOGGER = LogManager.getLogger(Set.class);
+    private static final int CENTS_IN_A_DOLLAR = 100;
     private List<Project> projects;
     private Map<Date, Day> allDays;
     private Integer setId;
@@ -155,11 +156,11 @@ public class Set {
                 .mapToInt(day -> {
                     if (day.getNextDay().isPresent() && day.getPreviousDay().isPresent()) {
                         Integer rate = rates.getRateInCents(day.getType(), DayType.FULL).getCostInCents();
-                        LOGGER.debug("Full Day (Rate: {}) - {}", rate, day);
+                        LOGGER.debug("Full Day (Rate: ${} ) - {}", rate / CENTS_IN_A_DOLLAR, day);
                         return rate;
                     } else if (day.getNextDay().isPresent() ^ day.getPreviousDay().isPresent()) {
                         Integer rate = rates.getRateInCents(day.getType(), DayType.TRAVEL).getCostInCents();
-                        LOGGER.debug("Travel Day (Rate: {}) - {}", rate, day);
+                        LOGGER.debug("Travel Day (Rate: ${} ) - {}", rate / CENTS_IN_A_DOLLAR, day);
                         return rate;
                     } else {
                         return 0;

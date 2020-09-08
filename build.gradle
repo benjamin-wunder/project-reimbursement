@@ -9,9 +9,11 @@
 plugins {
     // Apply the java plugin to add support for Java
     id 'java'
-
+    id 'eclipse'
+    id "com.github.johnrengelman.shadow" version "6.0.0"
     // Apply the application plugin to add support for building a CLI application
     id 'application'
+    id 'com.adarshr.test-logger' version '2.1.0'
 }
 
 repositories {
@@ -35,3 +37,8 @@ application {
     // Define the main class for the application
     mainClassName = 'project.reimbursement.App'
 }
+
+shadowJar {
+    classifier = null
+}
+

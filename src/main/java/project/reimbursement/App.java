@@ -1,191 +1,85 @@
 package project.reimbursement;
 
-import java.io.File;
 import java.io.IOException;
-import java.text.DateFormat;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.util.Locale;
 
+import org.apache.commons.cli.CommandLine;
+import org.apache.commons.cli.CommandLineParser;
+import org.apache.commons.cli.DefaultParser;
+import org.apache.commons.cli.HelpFormatter;
+import org.apache.commons.cli.MissingArgumentException;
+import org.apache.commons.cli.Option;
+import org.apache.commons.cli.Options;
+import org.apache.logging.log4j.Level;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.core.config.Configurator;
 
 import com.fasterxml.jackson.core.JsonParseException;
 import com.fasterxml.jackson.databind.JsonMappingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.SerializationFeature;
 
-import project.reimbursement.enums.CityType;
-import project.reimbursement.models.Project;
-import project.reimbursement.models.Set;
+import project.reimbursement.utils.Utils;
 
 public class App {
 
     private static final int CENTS_IN_A_DOLLAR = 100;
+    private static final String FILENAME_FLAG = "f";
+    private static final String LOGGER_FLAG = "l";
 
     private static final Logger LOGGER = LogManager.getLogger(App.class);
 
-    public static void main(String[] args) throws ParseException, JsonParseException, JsonMappingException, IOException {
+    public static void main(String[] args) throws java.text.ParseException,
+            JsonParseException,
+            JsonMappingException,
+            IOException,
+            org.apache.commons.cli.ParseException {
 
-        Rates rates = new Rates();
-        rates.setExampleRates();
-        createSet1(rates);
-        LOGGER.info("---------");
-        createSet2(rates);
-        LOGGER.info("---------");
-        createSet3(rates);
-        LOGGER.info("---------");
-        createSet4(rates);
-        LOGGER.info("---------");
-        createSet5(rates);
+        Options options = createOptions();
+        CommandLineParser parser = new DefaultParser();
+        CommandLine cmd;
+        SetInput setInput;
+        HelpFormatter formatter = new HelpFormatter();
 
-        /*List<String> argumentArray = Arrays.asList(args);
-        argumentArray.forEach(System.out::println);
-        SetInput setInput = importFrom("c:\\temp\\reimbursement_input.json");
-        
-        LOGGER.debug("Set Size: {}", setInput.getSets().size());
-        
-        setInput.getSets().stream().forEach(set -> {
-            set.generateTimeline();
-            Integer costInCents = set.calculateTotalInCents();
-            LOGGER.info("Total for set {}: ${}", set.getSetId(), costInCents / CENTS_IN_A_DOLLAR);
-        });*/
-    }
-
-    public static void createSet1(Rates rates) throws ParseException {
         try {
-            String project1Start = "1-Sep-2015";
-            String project1End = "3-Sep-2015";
+            cmd = parser.parse(options, args);
+            if (cmd.hasOption("h")) {
+                formatter.printHelp("project", options);
+                return;
+            }
 
-            Project project1 = new Project(project1Start, project1End, CityType.LOW_COST);
+            if (cmd.hasOption(LOGGER_FLAG)) {
+                Level level = Level.valueOf(cmd.getOptionValue(LOGGER_FLAG));
+                Configurator.setLevel("project.reimbursement", level);
+            }
 
-            Set set = new Set(rates);
-            set.addProject(project1);
+            if (cmd.hasOption(FILENAME_FLAG)) {
+                setInput = Utils.importFrom(cmd.getOptionValue(FILENAME_FLAG));
+            } else {
+                setInput = Utils.importFrom("scenarios/allscenarios.json");
+            }
 
-            set.generateTimeline();
+            LOGGER.debug("Set Size: {}", setInput.getSets().size());
 
-            Integer costInCents = set.calculateTotalInCents();
-            LOGGER.info("Total for set 1: ${}", costInCents / CENTS_IN_A_DOLLAR);
+            setInput.getSets().stream().forEach(set -> {
+                set.generateTimeline();
+                Integer costInCents = set.calculateTotalInCents();
+                LOGGER.info("Total for set {}: ${}", set.getSetId(), costInCents / CENTS_IN_A_DOLLAR);
+            });
+        } catch (IllegalArgumentException | MissingArgumentException e) {
+            LOGGER.error("Illegal/Missing Argument Detected.  Printing help");
+            System.out.println("Error: Bad Argument");
+            formatter.printHelp("java -jar project-reimbursement.jar", options);
         } catch (Exception e) {
-            LOGGER.error("Exception caught for set1: " + e.getClass() + " - " + e.getMessage());
+            LOGGER.error("The System Ended Abnormally: {}", e.getMessage());
         }
     }
 
-    public static void createSet2(Rates rates) throws ParseException {
-        try {
-            String project1Start = "1-Sep-2015";
-            String project1End = "1-Sep-2015";
-            String project2Start = "2-Sep-2015";
-            String project2End = "6-Sep-2015";
-            String project3Start = "6-Sep-2015";
-            String project3End = "8-Sep-2015";
-
-            Project project1 = new Project(project1Start, project1End, CityType.LOW_COST);
-            Project project2 = new Project(project2Start, project2End, CityType.HIGH_COST);
-            Project project3 = new Project(project3Start, project3End, CityType.LOW_COST);
-
-            Set set = new Set(rates);
-            set.addProject(project1);
-            set.addProject(project2);
-            set.addProject(project3);
-
-            set.generateTimeline();
-
-            LOGGER.info("Total for set 2: $" + set.calculateTotalInCents() / CENTS_IN_A_DOLLAR);
-        } catch (Exception e) {
-            LOGGER.error("Exception caught for set2: " + e.getClass() + " - " + e.getMessage());
-        }
-    }
-
-    public static void createSet3(Rates rates) throws ParseException {
-        try {
-            String project1Start = "1-Sep-2015";
-            String project1End = "3-Sep-2015";
-            String project2Start = "5-Sep-2015";
-            String project2End = "7-Sep-2015";
-            String project3Start = "8-Sep-2015";
-            String project3End = "8-Sep-2015";
-
-            Project project1 = new Project(project1Start, project1End, CityType.LOW_COST);
-            Project project2 = new Project(project2Start, project2End, CityType.HIGH_COST);
-            Project project3 = new Project(project3Start, project3End, CityType.HIGH_COST);
-
-            Set set3 = new Set(rates);
-            set3.addProject(project1);
-            set3.addProject(project2);
-            set3.addProject(project3);
-
-            set3.generateTimeline();
-
-            LOGGER.info("Total for set 3: $" + set3.calculateTotalInCents() / CENTS_IN_A_DOLLAR);
-        } catch (Exception e) {
-            LOGGER.error("Exception caught for set3: " + e.getClass() + " - " + e.getMessage());
-        }
-    }
-
-    public static void createSet4(Rates rates) throws ParseException {
-        try {
-            String project1Start = "1-Sep-2015";
-            String project1End = "1-Sep-2015";
-            String project2Start = "1-Sep-2015";
-            String project2End = "1-Sep-2015";
-            String project3Start = "2-Sep-2015";
-            String project3End = "2-Sep-2015";
-            String project4Start = "2-Sep-2015";
-            String project4End = "3-Sep-2015";
-
-            Project project1 = new Project(project1Start, project1End, CityType.LOW_COST);
-            Project project2 = new Project(project2Start, project2End, CityType.LOW_COST);
-            Project project3 = new Project(project3Start, project3End, CityType.HIGH_COST);
-            Project project4 = new Project(project4Start, project4End, CityType.HIGH_COST);
-
-            Set set = new Set(rates);
-            set.addProject(project1);
-            set.addProject(project2);
-            set.addProject(project3);
-            set.addProject(project4);
-
-            set.generateTimeline();
-
-            LOGGER.info("Total for set 4: $" + set.calculateTotalInCents() / CENTS_IN_A_DOLLAR);
-        } catch (Exception e) {
-            LOGGER.error("Exception caught for set4: " + e.getClass() + " - " + e.getMessage());
-        }
-    }
-
-    public static void createSet5(Rates rates) throws ParseException {
-        try {
-            String project1Start = "3-Sep-2015";
-            String project1End = "1-Sep-2015";
-
-            Project project1 = new Project(project1Start, project1End, CityType.LOW_COST);
-
-            Set set = new Set(rates);
-            set.addProject(project1);
-
-            set.generateTimeline();
-
-            LOGGER.info("Total for set 4: $" + set.calculateTotalInCents() / CENTS_IN_A_DOLLAR);
-        } catch (Exception e) {
-            LOGGER.error("Exception caught for set5: " + e.getClass() + " - " + e.getMessage());
-        }
-    }
-
-    public static SetInput importFrom(String fileName) throws JsonParseException, JsonMappingException, IOException {
-
-        File jsonFile = new File(fileName);
-        ObjectMapper mapper = new ObjectMapper();
-        mapper.disable(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS);
-        DateFormat formatter = new SimpleDateFormat("dd-MMM-yyyy", Locale.ENGLISH);
-        mapper.setDateFormat(formatter);
-        SetInput setInput = mapper.readValue(jsonFile, SetInput.class);
-
-        setInput.getSets().stream().forEach(set -> {
-            set.setRates(setInput.getRates());
-        });
-
-        return setInput;
-
+    public static Options createOptions() {
+        Options options = new Options();
+        Option help = new Option("h", "help", false, "print this message");
+        options.addOption(help);
+        options.addOption(LOGGER_FLAG, "loglevel", true, "Specify a log level");
+        options.addOption(FILENAME_FLAG, "filename", true, "Specify a file for input");
+        return options;
     }
 
 }

@@ -1,0 +1,57 @@
+{
+    "sets": [
+        {
+            "setId": 4,
+            "projects": [
+                {
+                    "id": 8,
+                    "startDate": "01-SEP-2020",
+                    "endDate": "01-SEP-2020",
+                    "cityType": "LOW_COST"
+                },
+                {
+                    "id": 9,
+                    "startDate": "01-SEP-2020",
+                    "endDate": "01-SEP-2020",
+                    "cityType": "LOW_COST"
+                },
+                {
+                    "id": 10,
+                    "startDate": "02-SEP-2020",
+                    "endDate": "02-SEP-2020",
+                    "cityType": "HIGH_COST"
+                },
+                {
+                    "id": 11,
+                    "startDate": "02-SEP-2020",
+                    "endDate": "03-SEP-2020",
+                    "cityType": "HIGH_COST"
+                }
+            ]
+        }
+    ],
+    "rates": {
+    	"rates": [
+	        {
+	            "cityType": "LOW_COST",
+	            "dayType": "TRAVEL",
+	            "costInCents": 4500 
+	        },
+	        {
+	            "cityType": "HIGH_COST",
+	            "dayType": "TRAVEL",
+	            "costInCents": 5500 
+	        },
+	        {
+	            "cityType": "LOW_COST",
+	            "dayType": "FULL",
+	            "costInCents": 7500 
+	        },
+	        {
+	            "cityType": "HIGH_COST",
+	            "dayType": "FULL",
+	            "costInCents": 8500 
+	        }
+    	]
+    }
+}        

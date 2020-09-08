@@ -22,8 +22,8 @@ public class ProjectTest {
         Project project = new Project(startDateString, endDateString, CityType.LOW_COST);
         Date startDate = formatter.parse(startDateString);
         Date endDate = formatter.parse(endDateString);
-        assertEquals(project.getStartDate(), startDate);
-        assertEquals(project.getEndDate(), endDate);
+        assertEquals(project.getStartDate().get(), startDate);
+        assertEquals(project.getEndDate().get(), endDate);
         assertEquals(project.getCityType(), CityType.LOW_COST);
 
     }

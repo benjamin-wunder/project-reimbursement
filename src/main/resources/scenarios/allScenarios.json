@@ -87,26 +87,28 @@
             ]
         }
     ],
-    "rates": [
-        {
-            "cityType": "LOW_COST",
-            "dayType": "TRAVEL",
-            "cost": 4500 
-        },
-        {
-            "cityType": "HIGH_COST",
-            "dayType": "TRAVEL",
-            "cost": 5500 
-        },
-        {
-            "cityType": "LOW_COST",
-            "dayType": "FULL",
-            "cost": 7500 
-        },
-        {
-            "cityType": "HIGH_COST",
-            "dayType": "FULL",
-            "cost": 8500 
-        }
-    ]
+    "rates": {
+    	"rates": [
+	        {
+	            "cityType": "LOW_COST",
+	            "dayType": "TRAVEL",
+	            "costInCents": 4500 
+	        },
+	        {
+	            "cityType": "HIGH_COST",
+	            "dayType": "TRAVEL",
+	            "costInCents": 5500 
+	        },
+	        {
+	            "cityType": "LOW_COST",
+	            "dayType": "FULL",
+	            "costInCents": 7500 
+	        },
+	        {
+	            "cityType": "HIGH_COST",
+	            "dayType": "FULL",
+	            "costInCents": 8500 
+	        }
+    	]
+    }
 }        
