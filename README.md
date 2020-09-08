@@ -31,7 +31,9 @@ Running with one of the following filenames will result in that specific file re
 
 ## Creating your own scenario
 
-If you'd like to create your own scenario, you can do so using the following template for creating the json as input:
+If you'd like to create your own scenario, you can use the -f and specify the full path as the argument.
+
+To create an input file, use the following template:
 ```
 {
   "sets": [
