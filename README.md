@@ -29,6 +29,41 @@ Running with one of the following filenames will result in that specific file re
 * java -jar project-reimbursement.jar -f scenarios/scenario4.json
 * java -jar project-reimbursement.jar -f scenarios/allScenarios.json
 
+## Creating your own scenario
+
+If you'd like to create your own scenario, you can do so using the following template for creating the json as input:
+```
+{
+  "sets": [
+    {
+      "setId": <setId>,
+      "projects": [
+        {
+          "id: <projectId>,
+          "startDate": "<DD-MMM-YYYY>",
+          "endDate": "<DD-MMM-YYYY>",
+          "cityType": "<LOW_COST | HIGH_COST>"
+        },
+        <additional projects...>
+      ]
+    },
+    <additional sets...>
+  ],
+  "rates": {
+    "rates": [
+      {
+        "cityType": "<LOW_COST | HIGH_COST>",
+        "dayType": "<TRAVEL | FULL>",
+        "costInCents": <cost in cents>
+      },
+      <additional rates...>
+    ]
+  }
+}
+```
+You can also look at the files in `src\main\resources\scenarios` for concrete examples
+
+
 ## Problem Description
 
 You have a set of projects, and you need to calculate a reimbursement amount for the set. Each project has a start date and an end date. The first day of a project and the last day of a project are always "travel" days. Days in the middle of a project are "full" days. There are also two types of cities a project can be in, high cost cities and low cost cities. 
