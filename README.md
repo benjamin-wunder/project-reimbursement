@@ -2,7 +2,7 @@
 
 ## Compile From Source
 
-This source code uses gradle as its dependency management tool.  Included in the source is the gradle wrapper
+This project uses gradle as its dependency management tool.  Included in the source is the gradle wrapper
 
 To build using the gradle wrapper, simply clone the repo and run `gradlew clean shadowJar` in the root.
 
@@ -10,10 +10,12 @@ This will create a file in the build/libs folder (relative to the root) called p
 
 ## Run
 
+<pre>
 usage: java -jar project-reimbursement.jar
- -f,--filename <arg>   Specify a file for input
- -h,--help             print this message
- -l,--loglevel <arg>   Specify a log level
+  -f,--filename &lt;arg&gt;   Specify a file for input
+  -h,--help             print this message
+  -l,--loglevel &lt;arg&gt;   Specify a log level
+</pre>
 
 Setting the log level to "INFO" will output the result of a given set/scenario.
 Setting the log level to "DEBUG" will output a more robust description of what is happening.
