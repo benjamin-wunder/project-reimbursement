@@ -54,7 +54,7 @@ public class App {
             if (cmd.hasOption(FILENAME_FLAG)) {
                 setInput = Utils.importFrom(cmd.getOptionValue(FILENAME_FLAG));
             } else {
-                setInput = Utils.importFrom("scenarios/allscenarios.json");
+                setInput = Utils.importFrom("scenarios/allScenarios.json");
             }
 
             LOGGER.debug("Set Size: {}", setInput.getSets().size());
